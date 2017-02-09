@@ -1,6 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Gama.WebApi.Models
+﻿
+namespace Gama.Repository.Models
 {
     public class KeyValueModels
     {

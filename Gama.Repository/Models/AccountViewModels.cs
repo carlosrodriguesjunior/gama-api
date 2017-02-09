@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GamaWebApi.Models
+namespace Gama.Repository.Models
 {
     // Models returned by AccountController actions.
 

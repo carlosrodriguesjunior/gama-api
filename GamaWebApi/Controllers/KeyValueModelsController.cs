@@ -1,40 +1,48 @@
-﻿using System;
+﻿using Gama.Repository.Models;
+using Gama.Repository.Repositories;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Gama.WebApi.Models;
-using GamaWebApi.Models;
+
 
 namespace Gama.WebApi.Controllers
 {
     public class KeyValueModelsController : ApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private KeyValuesRepository repository = new KeyValuesRepository();
 
         // GET: api/KeyValueModels
-        public IQueryable<KeyValueModels> GetKeyValueModels()
+        [ResponseType(typeof(IList<KeyValueModels>))]
+        public async Task<IHttpActionResult> GetKeyValueModels()
         {
-            return db.KeyValueModels;
+            try
+            {
+                return Ok( await repository.GetAll());
+            }
+            catch (System.Exception ex)
+            {
+
+                return InternalServerError(ex);
+            }
+
+            
         }
 
         // GET: api/KeyValueModels/5
         [ResponseType(typeof(KeyValueModels))]
         public async Task<IHttpActionResult> GetKeyValueModels(int id)
         {
-            KeyValueModels keyValueModels = await db.KeyValueModels.FindAsync(id);
-            if (keyValueModels == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(keyValueModels);
+            try
+            {
+                return Ok(await repository.GetOne(id));
+            }
+            catch (System.Exception ex)
+            {
+
+                return InternalServerError(ex);
+            }
         }
 
         // PUT: api/KeyValueModels/5
@@ -46,30 +54,15 @@ namespace Gama.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != keyValueModels.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(keyValueModels).State = EntityState.Modified;
-
             try
             {
-                await db.SaveChangesAsync();
+                await repository.Update(keyValueModels);
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (System.Exception ex)
             {
-                if (!KeyValueModelsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return InternalServerError(ex);
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST: api/KeyValueModels
@@ -81,40 +74,39 @@ namespace Gama.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.KeyValueModels.Add(keyValueModels);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = keyValueModels.Id }, keyValueModels);
+            try
+            {
+                await repository.Insert(keyValueModels);
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         // DELETE: api/KeyValueModels/5
         [ResponseType(typeof(KeyValueModels))]
         public async Task<IHttpActionResult> DeleteKeyValueModels(int id)
         {
-            KeyValueModels keyValueModels = await db.KeyValueModels.FindAsync(id);
-            if (keyValueModels == null)
+            try
             {
-                return NotFound();
+                await repository.Delete(id);
+                return Ok();
             }
-
-            db.KeyValueModels.Remove(keyValueModels);
-            await db.SaveChangesAsync();
-
-            return Ok(keyValueModels);
+            catch (System.Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                repository.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool KeyValueModelsExists(int id)
-        {
-            return db.KeyValueModels.Count(e => e.Id == id) > 0;
         }
     }
 }
