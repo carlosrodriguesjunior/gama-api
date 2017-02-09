@@ -29,5 +29,7 @@ namespace GamaWebApi.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Gama.WebApi.Models.KeyValueModels> KeyValueModels { get; set; }
     }
 }
