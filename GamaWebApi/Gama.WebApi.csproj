@@ -206,6 +206,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Gama.ApplicationService\Gama.ApplicationService.csproj">
+      <Project>{27EC6644-6288-4C64-A1A7-2EF4E851B602}</Project>
+      <Name>Gama.ApplicationService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gama.Repository\Gama.Repository.csproj">
       <Project>{19693267-5536-431D-BA2E-7E244DFA6ADA}</Project>
       <Name>Gama.Repository</Name>

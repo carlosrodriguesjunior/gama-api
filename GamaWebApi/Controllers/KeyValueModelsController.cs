@@ -1,4 +1,5 @@
-﻿using Gama.Repository.Models;
+﻿using Gama.ApplicationService;
+using Gama.Repository.Models;
 using Gama.Repository.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Gama.WebApi.Controllers
     public class KeyValueModelsController : ApiController
     {
         private KeyValuesRepository repository = new KeyValuesRepository();
+        private KeyValuesApplicationService applicationService = new KeyValuesApplicationService();
 
         // GET: api/KeyValueModels
         [ResponseType(typeof(IList<KeyValueModels>))]
@@ -76,7 +78,7 @@ namespace Gama.WebApi.Controllers
 
             try
             {
-                await repository.Insert(keyValueModels);
+                await applicationService.SaveKeyValueAndSendEmail(keyValueModels);
                 return Ok();
             }
             catch (System.Exception ex)
